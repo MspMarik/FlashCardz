@@ -47,7 +47,7 @@ const NavigationNonAuth = () => {
     // );
 
     return (
-        <Navbar variant="light" expand="md">
+        <Navbar variant="light" expand="md" className="mb-5">
             <Container>
                 <Navbar.Brand as={Link} to="/">
                     {/* <img alt="" src={logo} width="30" height="30" className="d-inline-block align-top" /> */}
