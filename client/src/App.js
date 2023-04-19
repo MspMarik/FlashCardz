@@ -6,7 +6,9 @@ import Signup from "./components/Signup";
 import Logout from "./components/Logout";
 import NotFound from "./components/NotFound";
 import Navigation from "./components/Navigation";
+import Cards from "./components/Cards";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import React, { useContext, useState, useEffect, useRef } from "react";
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
                         <Route exact path="/login" element={<Login />} />
                         <Route exact path="/signup" element={<Signup />} />
                         <Route exact path="/logout" element={<Logout />} />
+                        <Route exact path="/cards/:id" element={<Cards />} />
                         <Route exact path="*" element={<NotFound />} />
                     </Routes>
                 </main>

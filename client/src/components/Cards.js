@@ -15,9 +15,10 @@ import "../App.css";
 // import { AuthContext } from "../firebase/Auth";
 // import axios from "axios";
 
-const Home = () => {
+const Cards = () => {
     const [loading, setLoading] = useState(true);
     const [content, setContent] = useState(undefined);
+    let { cardId } = useParams();
     // const { currentUser } = useContext(AuthContext);
     let navigate = useNavigate();
     // let card = null;
@@ -72,8 +73,12 @@ const Home = () => {
             </div>
         );
     } else {
-        return <div className="container d-flex align-self-center justify-content-center">Btns to select which flash card set you want to view and add a set will be here</div>;
+        return (
+            <div className="container d-flex align-self-center justify-content-center">
+                <FlashcardArray cards={cards} />
+            </div>
+        );
     }
 };
 
-export default Home;
+export default Cards;
