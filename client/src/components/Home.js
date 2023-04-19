@@ -63,22 +63,7 @@ const Home = () => {
 
     useEffect(() => {
         setLoading(true);
-        // if (!currentUser) {
-        //     navigate("/login");
-        // }
-        // document.getElementById("ducksTab").classList.add("showlinkActive");
-        // document.getElementById("matchesTab").classList.remove("showlinkActive");
 
-        // if (currentUser) {
-        //     document.getElementById("logoutTab").classList.remove("showlinkActive");
-        // } else {
-        //     document.getElementById("loginTab").classList.remove("showlinkActive");
-        // }
-        // document.getElementById("chatTab").classList.remove("showlinkActive");
-        // async function get() {
-        //     return await getNextProfile().data;
-        // }
-        // let c = get();
         setLoading(false);
     }, []);
 
