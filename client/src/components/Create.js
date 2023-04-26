@@ -8,14 +8,16 @@ import { Navigate } from "react-router-dom";
 // import { AuthContext } from "../firebase/Auth";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Navigation from "./Navigation";
 import logo from "../logo.svg";
+import axios from "axios";
 // import { doSignInWithEmailAndPassword } from "../firebase/FirebaseFunctions";
 import "../App.css";
-import Navigation from "./Navigation";
 
-const Login = () => {
+const Create = () => {
     const [loading, setLoading] = useState(true);
     const [validated, setValidated] = useState(false);
+    let { id } = useParams();
 
     useEffect(() => {
         setLoading(true);
@@ -29,49 +31,41 @@ const Login = () => {
 
     // const { currentUser } = useContext(AuthContext);
     const currentUser = null;
-    const handleLogin = async (event) => {
-        event.preventDefault();
-        let { email, password } = event.target.elements;
 
-        try {
-            // await doSignInWithEmailAndPassword(email.value, password.value);
-        } catch (error) {
-            alert(error);
+    function submitCards(title, qnasList) {
+        let qnasObjList = [];
+        for (let i = 0; i < qnasList.length; i += 2) {
+            qnasObjList.push({ q: qnasList[i], a: qnasList[i + 1] });
         }
-    };
-
-    // async function handleSubmit(event) {
-    //     const form = event.currentTarget;
-    //     if (form.checkValidity() === false) {
-    //         event.preventDefault();
-    //         event.stopPropagation();
-    //     } else {
-    //         event.preventDefault();
-    //         event.stopPropagation();
-    //         setValidated(true);
-    //         let username = form.elements.loginUser.value;
-    //         let password = form.elements.loginPass.value;
-    //         try {
-    //             // await doSignInWithEmailAndPassword(username, password);
-    //         } catch (error) {
-    //             alert(error);
-    //         }
-    //     }
-    // }
+        axios.post(`localhost:5000/stack/${id}`, function (req, res) {
+            req.header("Access-Control-Allow-Origin", "true");
+            req.body({ userId: id, stack: qnasObjList, title: title });
+            req.send();
+        });
+    }
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
+        let qnas = document.getElementById("qnas").value.split("\n");
+        let title = document.getElementById("title").value;
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
+        } else {
+            if (qnas.length % 2 != 0) {
+                alert("Oops! Looks like a question was left unanswered!");
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            submitCards(title, qnas);
         }
 
         setValidated(true);
     };
 
-    if (currentUser) {
-        return <Navigate to="/" />;
-    }
+    // if (currentUser) {
+    //     return <Navigate to="/" />;
+    // }
     if (loading) {
         return (
             <div>
@@ -80,25 +74,20 @@ const Login = () => {
         );
     } else {
         return (
-            <div className="">
+            // <div className="container align-self-center card-container">
+            <div>
                 <Navigation />
                 <Card className="loginsignupcard loginboxshadow mt-3">
                     <Card.Body>
-                        <Card.Title>Login</Card.Title>
-                        <Card.Subtitle>
-                            <Link className="signuponloginpagelink mb-4" to="/signup">
-                                Don't have an account? Click here to sign up!
-                            </Link>
-                        </Card.Subtitle>
+                        <Card.Title>Create a stack of flash cards!</Card.Title>
                         <Form className="p-3 text-start" noValidate validated={validated} onSubmit={handleSubmit}>
-                            <Form.Group className="mb-3" controlId="loginUser">
-                                <Form.Label className="form-label">Username</Form.Label>
-                                <Form.Control name="loginUser" type="text" placeholder="Username" required />
+                            <Form.Group className="mb-3" controlId="title">
+                                <Form.Label>Stack Title</Form.Label>
+                                <Form.Control name="title" type="text" placeholder="History 101" required />
                             </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="loginPass">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control name="loginPass" type="password" placeholder="Password" required />
+                            <Form.Group className="mb-3" controlId="qnas">
+                                <Form.Label>Type your question, press enter, type your answer, press enter, repeat for each question/answer</Form.Label>
+                                <Form.Control name="qnas" as="textarea" placeholder="Type your questions and answers here..." required />
                             </Form.Group>
                             <Button variant="primary" type="submit" className="save-button">
                                 Submit
@@ -107,8 +96,10 @@ const Login = () => {
                     </Card.Body>
                 </Card>
             </div>
+
+            // </div>
         );
     }
 };
 
-export default Login;
+export default Create;

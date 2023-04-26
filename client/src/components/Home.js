@@ -12,12 +12,14 @@ import { useNavigate } from "react-router-dom";
 import { Flashcard, FlashcardArray } from "react-quizlet-flashcard"; //https://www.npmjs.com/package/react-quizlet-flashcard
 import logo from "../logo.svg";
 import "../App.css";
+import Navigation from "./Navigation";
 // import { AuthContext } from "../firebase/Auth";
 // import axios from "axios";
 
 const Home = () => {
     const [loading, setLoading] = useState(true);
     const [content, setContent] = useState(undefined);
+    const { id } = useParams();
     // const { currentUser } = useContext(AuthContext);
     let navigate = useNavigate();
     // let card = null;
@@ -72,7 +74,27 @@ const Home = () => {
             </div>
         );
     } else {
-        return <div className="container d-flex align-self-center justify-content-center">Btns to select which flash card set you want to view and add a set will be here</div>;
+        if (!id) {
+            return (
+                <div className="">
+                    <Navigation />
+                    <Link to={`/login`} className="m-3">
+                        <Button>Login</Button>
+                    </Link>
+                </div>
+            );
+        }
+        return (
+            <div className="">
+                <Navigation />
+                <Link to={`/cards/${id}`} className="m-3">
+                    <Button>View Your Flash Cards</Button>
+                </Link>
+                <Link to={`/create/${id}`} className="m-3">
+                    <Button variant="danger">Create a New Flash Card Stack</Button>
+                </Link>
+            </div>
+        );
     }
 };
 
