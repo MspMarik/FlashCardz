@@ -14,9 +14,10 @@ router.post('/', async (req, res) =>
   }
   let userId = body.userId;
   let stack = body.stack;
+  let title = body.title;
   
   try{
-    const returnVal  = await data.createStack(userId, stack);
+    const returnVal  = await data.createStack(userId,title, stack);
     res.status(200).json(returnVal);
   }
   catch(e)

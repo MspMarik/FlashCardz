@@ -2,7 +2,7 @@ const { ObjectId } = require("bson");
 const mongoCollections = require("../config/mongoCollections");
 const user = mongoCollections.users;
 const stacks = mongoCollections.stack;
-async function createStack(userId,setData)
+async function createStack(userId,title,setData)
 { 
     if(!userId||!setData)
     {
@@ -27,6 +27,7 @@ async function createStack(userId,setData)
     let stackCollection = await stacks()
     let obj = {
         _id: newObjId,
+        title: title,
          data:setData,
          creatorId:userId,
     }
