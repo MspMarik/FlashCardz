@@ -15,7 +15,6 @@ router.post('/', async (req, res) =>
   }
   let username = body.signupUsername;
   let password = body.signupPassword;
-  let name = body.name;
   
   try{
     const returnVal  = await data.create(name, username, password);

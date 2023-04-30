@@ -57,7 +57,6 @@ async function create(name, username, password){
         _id : newObjId,
         username: username,
         password: hash,
-        name: name,
         setsId:[]
     }
     const insertInfo = await userCollection.insertOne(obj);
