@@ -47,11 +47,7 @@ const Signup = () => {
             alert("Passwords do not match!");
         } else {
             axios
-                .post("localhost:5000/user/", function (req, res) {
-                    req.header("Access-Control-Allow-Origin", "true");
-                    req.body({ username: signupUser.value, password: signupPass.value });
-                    req.send();
-                })
+                .post("//localhost:5000/user/", { username: signupUser.value, password: signupPass.value })
                 .then(function (response) {
                     navigate(`/${response.data}`);
                 })
