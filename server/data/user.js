@@ -106,7 +106,7 @@ async function signIn(username,password)
     }
     if(compareToMatch)
     {
-        return {Auth:"True"}
+        return userFound
     }
     else{
         throw "Error Username or password is not right"
