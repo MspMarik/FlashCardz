@@ -9,6 +9,7 @@ import { Navigate } from "react-router-dom";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import logo from "../logo.svg";
 import "../App.css";
 import Navigation from "./Navigation";
@@ -27,6 +28,7 @@ const Signup = () => {
     const [pos3, setPos3] = useState(null);
     const [addPosBtnHidden, setAddPosBtnHidden] = useState(false);
     const [rmPosBtnHidden, setRmPosBtnHidden] = useState(true);
+    let navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -34,48 +36,67 @@ const Signup = () => {
     }, []);
 
     const handleSubmit = (event) => {
+        event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-            event.preventDefault();
             event.stopPropagation();
         }
 
-        setValidated(true);
-    };
+        const { signupUser, signupPass, signupRePass } = form.elements;
+        if (signupPass.value !== signupRePass.value) {
+            alert("Passwords do not match!");
+        } else {
+            axios
+                .post("localhost:5000/user/", function (req, res) {
+                    req.header("Access-Control-Allow-Origin", "true");
+                    req.body({ username: signupUser.value, password: signupPass.value });
+                    req.send();
+                })
+                .then(function (response) {
+                    navigate(`/${response.data}`);
+                })
+                .catch(function (response) {
+                    alert(`Error creating account: ${response.data}`);
+                    // navigate(`/login`);
+                });
 
-    const handleSignUp = async (e) => {
-        e.preventDefault();
-        const form = e.currentTarget;
-        if (form.checkValidity() === false) {
-            e.stopPropagation();
-        }
-        //upload.single('signupPic');
-
-        // let {data} = axios.post("http://localhost:3001/date/",
-        //     {
-        // signupName:,
-        // signupAge:,
-        // signupGender:,
-        // signupEmail:,
-        // pic:,
-        // signupUser:,
-        // signupPass:,
-        // signupBio:,
-        // signupLikes:,
-        // signupDisikes:,
-        // signupStatus:,
-        // signupPref:,
-
-        //     }
-        //     );
-        const { signupName, signupEmail, signupPassword } = e.target.elements;
-
-        try {
-            // await doCreateUserWithEmailAndPassword(signupEmail.value, signupPassword.value, signupName);
-        } catch (error) {
-            alert(error);
+            setValidated(true);
         }
     };
+
+    // const handleSignUp = async (e) => {
+    //     e.preventDefault();
+    //     const form = e.currentTarget;
+    //     if (form.checkValidity() === false) {
+    //         e.stopPropagation();
+    //     }
+    //     //upload.single('signupPic');
+
+    //     // let {data} = axios.post("http://localhost:3001/date/",
+    //     //     {
+    //     // signupName:,
+    //     // signupAge:,
+    //     // signupGender:,
+    //     // signupEmail:,
+    //     // pic:,
+    //     // signupUser:,
+    //     // signupPass:,
+    //     // signupBio:,
+    //     // signupLikes:,
+    //     // signupDisikes:,
+    //     // signupStatus:,
+    //     // signupPref:,
+
+    //     //     }
+    //     //     );
+    //     const { signupName, signupEmail, signupPassword } = e.target.elements;
+
+    //     try {
+    //         // await doCreateUserWithEmailAndPassword(signupEmail.value, signupPassword.value, signupName);
+    //     } catch (error) {
+    //         alert(error);
+    //     }
+    // };
 
     if (loading) {
         return (
@@ -96,15 +117,6 @@ const Signup = () => {
                             </Link>
                         </Card.Subtitle>
                         <Form className="p-3 text-start" noValidate validated={validated} onSubmit={handleSubmit}>
-                            {/* <h3>Basic Information</h3> */}
-                            <Form.Group className="mb-3" controlId="signupName">
-                                <Form.Label>Name</Form.Label>
-                                <Form.Control type="text" name="signupName" placeholder="Name" required />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="signupEmail">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control type="email" name="signupEmail" placeholder="example@example.com" required />
-                            </Form.Group>
                             <Form.Group className="mb-3" controlId="signupUser">
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control type="text" name="signupUser" placeholder="Username" required />

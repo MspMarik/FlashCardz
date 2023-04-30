@@ -5,9 +5,10 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 // import { AuthContext } from "../firebase/Auth";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import logo from "../logo.svg";
 // import { doSignInWithEmailAndPassword } from "../firebase/FirebaseFunctions";
 import "../App.css";
@@ -16,6 +17,7 @@ import Navigation from "./Navigation";
 const Login = () => {
     const [loading, setLoading] = useState(true);
     const [validated, setValidated] = useState(false);
+    let navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -60,11 +62,27 @@ const Login = () => {
     // }
 
     const handleSubmit = (event) => {
+        event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-            event.preventDefault();
             event.stopPropagation();
         }
+
+        const { loginUser, loginPass } = form.elements;
+
+        axios
+            .post("localhost:5000/user/signin", function (req, res) {
+                req.header("Access-Control-Allow-Origin", "true");
+                req.body({ username: loginUser.value, password: loginPass.value });
+                req.send();
+            })
+            .then(function (response) {
+                navigate(`/${response.data}`);
+            })
+            .catch(function (response) {
+                alert("Incorrect username or password!");
+                // navigate(`/login`);
+            });
 
         setValidated(true);
     };
