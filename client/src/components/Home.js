@@ -12,73 +12,58 @@ import { useNavigate } from "react-router-dom";
 import { Flashcard, FlashcardArray } from "react-quizlet-flashcard"; //https://www.npmjs.com/package/react-quizlet-flashcard
 import logo from "../logo.svg";
 import "../App.css";
+import Navigation from "./Navigation";
 // import { AuthContext } from "../firebase/Auth";
 // import axios from "axios";
 
 const Home = () => {
     const [loading, setLoading] = useState(true);
     const [content, setContent] = useState(undefined);
+    const { id } = useParams();
     // const { currentUser } = useContext(AuthContext);
     let navigate = useNavigate();
     // let card = null;
     const cards = [
         {
             id: 1,
-            front: "What is the capital of <u>Alaska</u>?",
-            back: "Juneau",
-            frontChild: <div>Hello there</div>,
-            backChild: <p>This is a back child</p>,
+            frontHTML: "What is the capital of Alaska?",
+            backHTML: "Juneau",
         },
         {
             id: 2,
-            front: "What is the capital of California?",
-            back: "Sacramento",
+            frontHTML: "What is the capital of California?",
+            backHTML: "Sacramento",
         },
         {
             id: 3,
-            front: "What is the capital of New York?",
-            back: "Albany",
+            frontHTML: "What is the capital of New York?",
+            backHTML: "Albany",
         },
         {
             id: 4,
-            front: "What is the capital of Florida?",
-            back: "Tallahassee",
+            frontHTML: "What is the capital of Florida?",
+            backHTML: "Tallahassee",
         },
         {
             id: 5,
-            front: "What is the capital of Texas?",
-            back: "Austin",
+            frontHTML: "What is the capital of Texas?",
+            backHTML: "Austin",
         },
         {
             id: 6,
-            front: "What is the capital of New Mexico?",
-            back: "Santa Fe",
+            frontHTML: "What is the capital of New Mexico?",
+            backHTML: "Santa Fe",
         },
         {
             id: 7,
-            front: "What is the capital of Arizona?",
-            back: "Phoenix",
+            frontHTML: "What is the capital of Arizona?",
+            backHTML: "Phoenix",
         },
     ];
 
     useEffect(() => {
         setLoading(true);
-        // if (!currentUser) {
-        //     navigate("/login");
-        // }
-        // document.getElementById("ducksTab").classList.add("showlinkActive");
-        // document.getElementById("matchesTab").classList.remove("showlinkActive");
 
-        // if (currentUser) {
-        //     document.getElementById("logoutTab").classList.remove("showlinkActive");
-        // } else {
-        //     document.getElementById("loginTab").classList.remove("showlinkActive");
-        // }
-        // document.getElementById("chatTab").classList.remove("showlinkActive");
-        // async function get() {
-        //     return await getNextProfile().data;
-        // }
-        // let c = get();
         setLoading(false);
     }, []);
 
@@ -89,9 +74,25 @@ const Home = () => {
             </div>
         );
     } else {
+        if (!id) {
+            return (
+                <div className="">
+                    <Navigation />
+                    <Link to={`/login`} className="m-3">
+                        <Button>Login</Button>
+                    </Link>
+                </div>
+            );
+        }
         return (
-            <div className="container d-flex align-self-center justify-content-center">
-                <FlashcardArray cards={cards} />
+            <div className="">
+                <Navigation />
+                <Link to={`/cards/${id}`} className="m-3">
+                    <Button>View Your Flash Cards</Button>
+                </Link>
+                <Link to={`/create/${id}`} className="m-3">
+                    <Button variant="danger">Create a New Flash Card Stack</Button>
+                </Link>
             </div>
         );
     }
