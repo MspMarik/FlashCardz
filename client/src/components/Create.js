@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Overlay from "react-bootstrap/esm/Overlay";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 // import { AuthContext } from "../firebase/Auth";
@@ -17,7 +18,10 @@ import "../App.css";
 const Create = () => {
     const [loading, setLoading] = useState(true);
     const [validated, setValidated] = useState(false);
+    const [show, setShow] = useState(false);
+    const target = useRef(null);
     let { id } = useParams();
+    let navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -37,14 +41,13 @@ const Create = () => {
         for (let i = 0; i < qnasList.length; i += 2) {
             qnasObjList.push({ q: qnasList[i], a: qnasList[i + 1] });
         }
-        axios.post(`localhost:5000/stack/${id}`, function (req, res) {
-            req.header("Access-Control-Allow-Origin", "true");
-            req.body({ userId: id, stack: qnasObjList, title: title });
-            req.send();
+        axios.post(`//localhost:5000/stack/${id}`, { userId: id, stack: qnasObjList, title: title }).then(function () {
+            navigate(`/cards/${id}`);
         });
     }
 
     const handleSubmit = (event) => {
+        event.preventDefault();
         const form = event.currentTarget;
         let qnas = document.getElementById("qnas").value.split("\n");
         let title = document.getElementById("title").value;
@@ -86,7 +89,31 @@ const Create = () => {
                                 <Form.Control name="title" type="text" placeholder="History 101" required />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="qnas">
-                                <Form.Label>Type your question, press enter, type your answer, press enter, repeat for each question/answer</Form.Label>
+                                <Form.Label>
+                                    Type your question, press enter, type your answer, press enter, repeat for all question/answer pairs
+                                    {/* Type your questions and answers here{" "} */}
+                                    {/* <Button ref={target} onMouseEnter={() => setShow(!show)} onMouseLeave={() => setShow(!show)}>
+                                        How to input questions and answers (hover over me)
+                                    </Button>
+                                    <Overlay target={target.current} show={show} placement="top">
+                                        {({ placement: _placement, arrowProps: _arrowProps, show: _show, popper: _popper, hasDoneInitialMeasure: _hasDoneInitialMeasure, ...props }) => (
+                                            <div
+                                                {...props}
+                                                style={{
+                                                    position: "absolute",
+                                                    backgroundColor: "grey",
+                                                    padding: "2px 10px",
+                                                    marginBottom: "5px",
+                                                    color: "white",
+                                                    borderRadius: 3,
+                                                    ...props.style,
+                                                }}
+                                            >
+                                                Type your question, press enter, type your answer, press enter, repeat for all question/answer pairs
+                                            </div>
+                                        )}
+                                    </Overlay> */}
+                                </Form.Label>
                                 <Form.Control name="qnas" as="textarea" placeholder="Type your questions and answers here..." required />
                             </Form.Group>
                             <Button variant="primary" type="submit" className="save-button">

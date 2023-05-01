@@ -19,7 +19,7 @@ import axios from "axios";
 
 const Cards = () => {
     const [loading, setLoading] = useState(true);
-    const [content, setContent] = useState(undefined);
+    const [content, setContent] = useState([]);
     const [data, setData] = useState(undefined);
     let { id } = useParams();
     // const { currentUser } = useContext(AuthContext);
@@ -62,12 +62,24 @@ const Cards = () => {
     //     backHTML: "Phoenix",
     // },
 
-    function buildStacks(data) {
+    function getData() {
+        let d;
+        axios.get(`//localhost:5000/user/userStack/${id}`).then(function (response) {
+            // console.log(response);
+            setData(response.data);
+            d = response.data;
+        });
+        return d;
+    }
+
+    function buildStacks(dataa) {
+        // let data = getData();
         let ret = [];
         //<FlashcardArray cards={cards} />
-        for (let stack of data) {
+        for (let stack of dataa) {
+            let title = stack.title;
             let cards = [];
-            for (let card of stack) {
+            for (let card of stack.data) {
                 let count = 1;
                 cards.push({
                     id: count,
@@ -76,24 +88,27 @@ const Cards = () => {
                 });
                 card++;
             }
-            ret.push(<FlashcardArray cards={cards} />);
+            ret.push(
+                <span>
+                    <h3>{title}</h3>
+                    <FlashcardArray cards={cards} />
+                </span>
+            );
         }
-        return ret;
+        setContent(ret);
     }
 
     useEffect(() => {
         setLoading(true);
         if (!data) {
-            axios
-                .get(`localhost:5000/user/userStack/${id}`, function (req, res) {
-                    res.header("Access-Control-Allow-Origin", "true");
-                    // res.body({ userId: id, stack: qnasObjList, title: title });
-                    res.send();
-                })
-                .then(function (response) {
+            async function getData() {
+                await axios.get(`//localhost:5000/user/userStack/${id}`).then(function (response) {
                     // console.log(response);
                     setData(response.data);
+                    buildStacks(response.data);
                 });
+            }
+            getData();
         }
         setLoading(false);
     }, []);
@@ -104,11 +119,17 @@ const Cards = () => {
                 <h2>Loading....</h2>
             </div>
         );
+    } else if (content.length == 0) {
+        return (
+            <div>
+                <h2>Fetching data....</h2>
+            </div>
+        );
     } else {
         return (
             <div className="">
                 <Navigation />
-                <div className="container d-flex align-self-center justify-content-center">{buildStacks(data)}</div>
+                <div className="container d-flex align-self-center justify-content-center flex-column">{content}</div>
             </div>
         );
     }

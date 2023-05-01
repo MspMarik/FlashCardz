@@ -71,13 +71,9 @@ const Login = () => {
         const { loginUser, loginPass } = form.elements;
 
         axios
-            .post("localhost:5000/user/signin", function (req, res) {
-                req.header("Access-Control-Allow-Origin", "true");
-                req.body({ username: loginUser.value, password: loginPass.value });
-                req.send();
-            })
+            .post("//localhost:5000/user/signin", { username: loginUser.value, password: loginPass.value })
             .then(function (response) {
-                navigate(`/${response.data}`);
+                navigate(`/${response.data._id}`);
             })
             .catch(function (response) {
                 alert("Incorrect username or password!");

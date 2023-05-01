@@ -49,7 +49,7 @@ const Signup = () => {
             axios
                 .post("//localhost:5000/user/", { username: signupUser.value, password: signupPass.value })
                 .then(function (response) {
-                    navigate(`/${response.data}`);
+                    navigate(`/${response.data._id}`);
                 })
                 .catch(function (response) {
                     alert(`Error creating account: ${response.data}`);
